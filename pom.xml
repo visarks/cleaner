@@ -91,7 +91,6 @@
                     <appVersion>${project.version}</appVersion>
                     <description>文件清理工具</description>
                     <vendor>Cleaner</vendor>
-                    <type>dmg</type>
                     <options>
                         <option>-Xmx512m</option>
                         <option>-XX:+UseSerialGC</option>
