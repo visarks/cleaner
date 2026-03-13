@@ -41,11 +41,12 @@ jobs:
 
       - name: Install WiX on Windows
         if: runner.os == 'Windows'
+        shell: bash
         run: |
           curl -L -o wix311.zip https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip
           mkdir -p wix
           unzip wix311.zip -d wix
-          echo "$PWD/wix" >> $env:GITHUB_PATH
+          echo "$PWD/wix" >> $GITHUB_PATH
 
       - name: Build with Maven
         run: mvn clean compile
@@ -54,6 +55,12 @@ jobs:
         run: mvn javafx:jlink
 
       - name: Package application
+        if: runner.os != 'Windows'
+        run: mvn jfx:package "-Djfx.type=${{ matrix.type }}"
+
+      - name: Package application (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
         run: mvn jfx:package "-Djfx.type=${{ matrix.type }}"
 
       - name: Upload artifact (macOS)
