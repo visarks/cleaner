@@ -7,6 +7,9 @@ echo "=== 生成应用图标 ==="
 ICON_DIR="src/main/resources/icons.iconset"
 mkdir -p "$ICON_DIR"
 
+# 创建平台目录
+mkdir -p javafx/mac javafx/windows javafx/linux
+
 # 创建图标生成器
 cat > /tmp/IconGen.java << 'JAVAEOF'
 import javax.imageio.ImageIO;
@@ -36,6 +39,23 @@ public class IconGen {
         ImageIO.write(generateLogo(256), "PNG", new File(outputDir + "/icon_128x128@2x.png"));
         ImageIO.write(generateLogo(512), "PNG", new File(outputDir + "/icon_256x256@2x.png"));
         ImageIO.write(generateLogo(1024), "PNG", new File(outputDir + "/icon_512x512@2x.png"));
+
+        // Generate Linux PNG (256x256)
+        System.out.println("Generating Linux PNG...");
+        new File("javafx/linux").mkdirs();
+        ImageIO.write(generateLogo(256), "PNG", new File("javafx/linux/Cleaner.png"));
+        System.out.println("Generated: javafx/linux/Cleaner.png");
+
+        // Generate Windows PNG placeholders (will be converted to ICO)
+        System.out.println("Generating Windows PNG icons...");
+        new File("javafx/windows").mkdirs();
+        ImageIO.write(generateLogo(16), "PNG", new File("javafx/windows/icon_16.png"));
+        ImageIO.write(generateLogo(32), "PNG", new File("javafx/windows/icon_32.png"));
+        ImageIO.write(generateLogo(48), "PNG", new File("javafx/windows/icon_48.png"));
+        ImageIO.write(generateLogo(64), "PNG", new File("javafx/windows/icon_64.png"));
+        ImageIO.write(generateLogo(128), "PNG", new File("javafx/windows/icon_128.png"));
+        ImageIO.write(generateLogo(256), "PNG", new File("javafx/windows/icon_256.png"));
+        System.out.println("Generated Windows PNG icons in javafx/windows/");
 
         System.out.println("All icons generated successfully!");
     }
@@ -98,16 +118,43 @@ echo ">>> 生成 PNG 图标..."
 javac /tmp/IconGen.java -d /tmp
 java -cp /tmp IconGen
 
-# 使用 iconutil 创建 icns 文件
+# 使用 iconutil 创建 icns 文件 (macOS)
 echo ">>> 创建 icns 文件..."
 iconutil -c icns src/main/resources/icons.iconset -o src/main/resources/icon.icns
 
 # 复制到 javafx/mac 目录（用于打包）
-mkdir -p javafx/mac
 cp src/main/resources/icon.icns javafx/mac/Cleaner.icns
+
+# 尝试创建 Windows ICO 文件
+echo ">>> 创建 Windows ICO 文件..."
+if command -v convert &> /dev/null; then
+    # 使用 ImageMagick 创建 ICO
+    convert javafx/windows/icon_16.png javafx/windows/icon_32.png \
+            javafx/windows/icon_48.png javafx/windows/icon_64.png \
+            javafx/windows/icon_128.png javafx/windows/icon_256.png \
+            javafx/windows/Cleaner.ico
+    echo "Created: javafx/windows/Cleaner.ico"
+else
+    echo "ImageMagick not found. Creating placeholder ICO from PNG..."
+    # 创建一个简单的 ICO 文件（使用 256x256 PNG 作为基础）
+    # 注意：这只是一个临时的解决方案，建议安装 ImageMagick 获取更好的 ICO 文件
+    cp javafx/windows/icon_256.png javafx/windows/Cleaner.png
+    echo "Note: For best results, install ImageMagick and run this script again."
+    echo "      brew install imagemagick"
+fi
 
 echo ""
 echo "=== 图标生成完成 ==="
+echo ""
+echo "macOS:"
 echo "  - 应用内图标: src/main/resources/icon.icns"
 echo "  - 打包图标:   javafx/mac/Cleaner.icns"
-ls -la src/main/resources/icon.icns javafx/mac/Cleaner.icns
+echo ""
+echo "Windows:"
+echo "  - PNG 图标:   javafx/windows/icon_*.png"
+echo "  - ICO 文件:   javafx/windows/Cleaner.ico (如已安装 ImageMagick)"
+echo ""
+echo "Linux:"
+echo "  - PNG 图标:   javafx/linux/Cleaner.png"
+echo ""
+ls -la javafx/mac/ javafx/windows/ javafx/linux/
