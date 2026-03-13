@@ -37,29 +37,30 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libxtst-dev
+          sudo apt-get install -y libgtk-3-dev libxtst-dev fakeroot
 
-      - name: Install WiX on Windows
+      - name: Install WiX v3 on Windows
         if: runner.os == 'Windows'
         shell: bash
         run: |
+          # 下载 WiX v3.11.2
           curl -L -o wix311.zip https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip
-          mkdir -p wix
-          unzip wix311.zip -d wix
-          echo "$PWD/wix" >> $GITHUB_PATH
+          mkdir -p "$HOME/wix"
+          unzip -o wix311.zip -d "$HOME/wix"
+          # 添加到 PATH
+          echo "$HOME/wix" >> $GITHUB_PATH
+          # 验证安装
+          "$HOME/wix/candle.exe" -?
 
       - name: Build with Maven
+        shell: bash
         run: mvn clean compile
 
       - name: Create jlink image
+        shell: bash
         run: mvn javafx:jlink
 
       - name: Package application
-        if: runner.os != 'Windows'
-        run: mvn jfx:package "-Djfx.type=${{ matrix.type }}"
-
-      - name: Package application (Windows)
-        if: runner.os == 'Windows'
         shell: bash
         run: mvn jfx:package "-Djfx.type=${{ matrix.type }}"
 
