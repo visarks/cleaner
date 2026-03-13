@@ -46,7 +46,7 @@ jobs:
         run: mvn javafx:jlink
 
       - name: Package application
-        run: mvn jfx:package -Djfx.type=${{ matrix.type }}
+        run: mvn jfx:package "-Djfx.type=${{ matrix.type }}"
 
       - name: Upload artifact (macOS)
         if: runner.os == 'macOS'
