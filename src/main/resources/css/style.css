@@ -1,0 +1,6 @@
+/* Minimal custom styles - rely on AtlantaFX */
+
+/* Left panel background */
+.left-panel {
+    -fx-background-color: -color-bg-subtle;
+}

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cleaner.controller.MainController"
+            styleClass="bg-default">
+
+    <!-- Left Panel - Folder List -->
+    <left>
+        <VBox spacing="8" style="-fx-background-color: -color-bg-subtle;" prefWidth="280">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- App Logo and Title -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ImageView fx:id="logoImageView" fitWidth="32" fitHeight="32"/>
+                <VBox spacing="0">
+                    <Label text="清理工具" styleClass="text-bold"/>
+                    <Label text="快速释放磁盘空间" styleClass="text-muted"/>
+                </VBox>
+            </HBox>
+
+            <Separator/>
+
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="文件夹列表" styleClass="text-bold"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="addFolderButton" text="添加文件夹" onAction="#onAddFolder" styleClass="button-outlined,accent"/>
+            </HBox>
+
+            <ListView fx:id="folderListView" VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="8" style="-fx-min-height: 36; -fx-pref-height: 36;">
+                <Button fx:id="scanButton" text="开始扫描" onAction="#onScan"
+                        HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="accent"/>
+                <Button fx:id="stopButton" text="停止扫描" onAction="#onStopScan"
+                        visible="false" managed="false" HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                        style="-fx-background-color: #cf222e; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </HBox>
+
+        </VBox>
+    </left>
+
+    <!-- Center Panel - Tabs -->
+    <center>
+        <VBox spacing="0">
+            <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+
+                <!-- File List Tab -->
+                <Tab fx:id="fileListTab" text="文件列表">
+                    <VBox spacing="8">
+                        <padding>
+                            <Insets top="10" right="12" bottom="10" left="12"/>
+                        </padding>
+
+                        <!-- Toolbar above table -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label fx:id="fileCountLabel" text="" styleClass="text-muted"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="deleteSelectedButton" text="删除选中" onAction="#onDeleteSelected"
+                                    styleClass="button-outlined,danger"/>
+                        </HBox>
+
+                        <!-- File Table -->
+                        <TableView fx:id="fileTableView" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="selectColumn" prefWidth="50"/>
+                                <TableColumn fx:id="fileNameColumn" text="文件名" prefWidth="200"/>
+                                <TableColumn fx:id="pathColumn" text="路径" prefWidth="300"/>
+                                <TableColumn fx:id="sizeColumn" text="大小" prefWidth="80"/>
+                                <TableColumn fx:id="modifiedColumn" text="修改时间" prefWidth="150"/>
+                                <TableColumn fx:id="ruleColumn" text="匹配规则" prefWidth="150"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <!-- Status Bar - always visible but content hidden when not scanning -->
+                        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-min-height: 36; -fx-pref-height: 36;">
+                            <padding>
+                                <Insets top="4" right="10" bottom="4" left="10"/>
+                            </padding>
+                            <ProgressBar fx:id="progressBar" prefWidth="150" visible="false"/>
+                            <Label fx:id="statusLabel" HBox.hgrow="ALWAYS" visible="false"/>
+                        </HBox>
+                    </VBox>
+                </Tab>
+
+                <!-- Delete Rules Tab -->
+                <Tab fx:id="deleteRulesTab" text="删除规则">
+                    <VBox spacing="8">
+                        <padding>
+                            <Insets top="10" right="12" bottom="10" left="12"/>
+                        </padding>
+
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <TextField fx:id="deleteRuleField" promptText="示例: *.tmp, node_modules, **/dist/**, {*.log,*.tmp}"
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="addDeleteRuleButton" text="添加规则" onAction="#onAddDeleteRule" styleClass="button-outlined,accent"/>
+                        </HBox>
+
+                        <ListView fx:id="deleteRulesListView" VBox.vgrow="ALWAYS"/>
+
+                        <!-- Bottom spacer to align with left panel -->
+                        <Region style="-fx-min-height: 36; -fx-pref-height: 36;"/>
+                    </VBox>
+                </Tab>
+
+                <!-- Keep Rules Tab -->
+                <Tab fx:id="keepRulesTab" text="保留规则">
+                    <VBox spacing="8">
+                        <padding>
+                            <Insets top="10" right="12" bottom="10" left="12"/>
+                        </padding>
+
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <TextField fx:id="keepRuleField" promptText="示例: *important*, *.keep, **/config/**"
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="addKeepRuleButton" text="添加规则" onAction="#onAddKeepRule" styleClass="button-outlined,accent"/>
+                        </HBox>
+
+                        <ListView fx:id="keepRulesListView" VBox.vgrow="ALWAYS"/>
+
+                        <!-- Bottom spacer to align with left panel -->
+                        <Region style="-fx-min-height: 36; -fx-pref-height: 36;"/>
+                    </VBox>
+                </Tab>
+
+            </TabPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

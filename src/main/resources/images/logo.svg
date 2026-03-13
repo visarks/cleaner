@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f883d"/>
+      <stop offset="100%" style="stop-color:#2ea043"/>
+    </linearGradient>
+    <linearGradient id="brush" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e5e5e5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#bg)"/>
+
+  <!-- Broom/brush icon -->
+  <g fill="url(#brush)">
+    <!-- Handle -->
+    <rect x="58" y="20" width="12" height="50" rx="3"/>
+
+    <!-- Broom head -->
+    <path d="M40 70 L88 70 L88 85 Q88 95 78 95 L50 95 Q40 95 40 85 Z" rx="5"/>
+
+    <!-- Bristles -->
+    <rect x="44" y="95" width="4" height="18" rx="1"/>
+    <rect x="52" y="95" width="4" height="22" rx="1"/>
+    <rect x="60" y="95" width="4" height="20" rx="1"/>
+    <rect x="68" y="95" width="4" height="22" rx="1"/>
+    <rect x="76" y="95" width="4" height="18" rx="1"/>
+  </g>
+
+  <!-- Sparkle effects -->
+  <g fill="#ffffff" opacity="0.9">
+    <circle cx="30" cy="35" r="3"/>
+    <circle cx="100" cy="45" r="2"/>
+    <circle cx="95" cy="30" r="4"/>
+    <path d="M25 50 L27 45 L29 50 L34 52 L29 54 L27 59 L25 54 L20 52 Z"/>
+    <path d="M98 60 L100 55 L102 60 L107 62 L102 64 L100 69 L98 64 L93 62 Z"/>
+  </g>
+</svg>
