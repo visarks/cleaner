@@ -9,6 +9,8 @@ import com.cleaner.model.FileItem;
 import com.cleaner.model.FolderConfig;
 import com.cleaner.model.KeepRule;
 import com.cleaner.scanner.FileScanner;
+import com.cleaner.update.UpdateChecker;
+import com.cleaner.update.UpdateService;
 import com.cleaner.util.LogoGenerator;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -99,6 +101,48 @@ public class MainController {
         loadConfig();
         updateScanButtonState();
         updateDeleteButtonState();
+        checkForUpdates();
+    }
+
+    /**
+     * 检查软件更新
+     */
+    private void checkForUpdates() {
+        UpdateService updateService = UpdateService.getInstance();
+        // 异步检查更新，不阻塞 UI
+        Thread.ofVirtual().start(() -> {
+            try {
+                Thread.sleep(2000); // 延迟 2 秒，避免启动时立即检查
+                updateService.checkForUpdate(optionalUpdate -> {
+                    if (optionalUpdate.isPresent()) {
+                        showUpdateNotification(optionalUpdate.get());
+                    }
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+    }
+
+    /**
+     * 显示更新通知
+     */
+    private void showUpdateNotification(UpdateChecker.UpdateInfo updateInfo) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("发现新版本");
+        alert.setHeaderText(String.format("发现新版本 %s (当前版本: %s)",
+            updateInfo.versionTag(), updateInfo.currentVersion()));
+
+        ButtonType updateBtn = new ButtonType("立即更新");
+        ButtonType laterBtn = new ButtonType("稍后提醒", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(updateBtn, laterBtn);
+
+        alert.showAndWait().ifPresent(result -> {
+            if (result == updateBtn) {
+                UpdateService.getInstance().showUpdateDialog(updateInfo);
+            }
+        });
     }
 
     private void setupButtonIcons() {

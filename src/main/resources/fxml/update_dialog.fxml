@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cleaner.update.UpdateDialogController"
+      spacing="15" prefWidth="480" prefHeight="320">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- 标题 -->
+    <Label text="发现新版本" styleClass="text-bold" style="-fx-font-size: 18px;"/>
+
+    <!-- 版本信息 -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="当前版本:" styleClass="text-muted"/>
+        <Label fx:id="currentVersionLabel" style="-fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="最新版本:" styleClass="text-muted"/>
+        <Label fx:id="latestVersionLabel" style="-fx-font-weight: bold; -fx-text-fill: -color-accent-fg;"/>
+    </HBox>
+
+    <!-- 更新说明 -->
+    <Label text="更新内容:" styleClass="text-muted"/>
+    <TextArea fx:id="releaseNotesArea" VBox.vgrow="ALWAYS" wrapText="true" editable="false"
+              style="-fx-background-color: -color-bg-subtle;"/>
+
+    <!-- 下载进度 -->
+    <VBox spacing="5" fx:id="downloadBox" visible="false" managed="false">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="downloadStatusLabel" styleClass="text-muted"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="downloadPercentLabel"/>
+        </HBox>
+        <ProgressBar fx:id="downloadProgressBar" prefWidth="Infinity"/>
+    </VBox>
+
+    <!-- 按钮 -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="laterButton" text="稍后提醒" onAction="#onLater"
+                styleClass="button-outlined"/>
+        <Button fx:id="downloadButton" text="下载并安装" onAction="#onDownloadAndInstall"
+                styleClass="accent"/>
+        <Button fx:id="viewButton" text="查看发布页" onAction="#onViewRelease"
+                styleClass="button-outlined"/>
+        <Button fx:id="cancelButton" text="取消下载" onAction="#onCancelDownload"
+                visible="false" managed="false" style="-fx-background-color: #cf222e; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>
