@@ -98,11 +98,13 @@ public class UpdateManager {
 
                 if (contentLength > 0) {
                     double progress = (double) totalRead / contentLength;
+                    final long finalTotalRead = totalRead;
+                    final long finalContentLength = contentLength;
                     Platform.runLater(() -> {
                         downloadProgress.set(progress);
                         updateStatus(String.format("已下载: %.1f MB / %.1f MB",
-                            totalRead / (1024.0 * 1024.0),
-                            contentLength / (1024.0 * 1024.0)));
+                            finalTotalRead / (1024.0 * 1024.0),
+                            finalContentLength / (1024.0 * 1024.0)));
                     });
                     if (progressCallback != null) {
                         progressCallback.accept(progress);
