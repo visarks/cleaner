@@ -15,12 +15,13 @@ jobs:
           - os: macos-latest
             type: dmg
             artifact: Cleaner-macos
-          - os: windows-latest
-            type: exe
-            artifact: Cleaner-windows
-          - os: ubuntu-latest
-            type: deb
-            artifact: Cleaner-linux
+          # Windows and Linux builds temporarily disabled
+          # - os: windows-latest
+          #   type: exe
+          #   artifact: Cleaner-windows
+          # - os: ubuntu-latest
+          #   type: deb
+          #   artifact: Cleaner-linux
 
     steps:
       - name: Checkout code
@@ -97,25 +98,23 @@ jobs:
           name: Cleaner-macos
           path: artifacts/macos
 
-      - name: Download Windows artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Cleaner-windows
-          path: artifacts/windows
-
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Cleaner-linux
-          path: artifacts/linux
+      # Windows and Linux artifacts disabled
+      # - name: Download Windows artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: Cleaner-windows
+      #     path: artifacts/windows
+      # - name: Download Linux artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: Cleaner-linux
+      #     path: artifacts/linux
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             artifacts/macos/*
-            artifacts/windows/*
-            artifacts/linux/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
